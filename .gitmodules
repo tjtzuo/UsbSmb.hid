@@ -1,0 +1,4 @@
+[submodule "UsbSmb"]
+	path = UsbSmb
+	url = https://github.com/tjtzuo/UsbSmb.git
+	branch = master
