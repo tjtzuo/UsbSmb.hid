@@ -33,13 +33,16 @@ namespace PFC_tool
         }
         public bool ReadByte(int cmd, byte[] pValue)
         {
+#if _HDQ_
             if (bHDQ && cmd < 0x80)
                 return UsbHdqRead(nDevIndex, (byte)cmd, pValue);
             else
-                return UsbSmbRead(nDevIndex, Addr, (byte)cmd, 0, sizeof(Byte), pValue);
+#endif
+            return UsbSmbRead(nDevIndex, Addr, (byte)cmd, 0, sizeof(Byte), pValue);
         }
         public bool ReadBytes(int cmd, int nCount, byte[] pBuf)
         {
+#if _HDQ_
             if (bHDQ && cmd < 0x80)
             {
                 for (int i = 0; i < nCount; i++)
@@ -52,7 +55,8 @@ namespace PFC_tool
                 return true;
             }
             else
-                return UsbSmbRead(nDevIndex, Addr, (byte)cmd, 0, (byte)nCount, pBuf);
+#endif
+            return UsbSmbRead(nDevIndex, Addr, (byte)cmd, 0, (byte)nCount, pBuf);
         }
         public bool ReadBlock(int cmd, int nCount, byte[] pBuf)
         {
@@ -61,10 +65,11 @@ namespace PFC_tool
             Array.Copy(pBlock, 1, pBuf, 0, nCount);
             return result && (pBlock[0] <= nCount);
         }
-        public bool ReadWord(int cmd, short[] pwValue)
+        public bool ReadWord(int cmd, out ushort wValue)
         {
             bool result = false;
             byte[] pBuf = new byte[2];
+#if _HDQ_
             if (bHDQ && cmd < 0x80)
             {
                 if (UsbHdqRead(nDevIndex, (byte)(cmd + 1), pBuf))
@@ -75,10 +80,11 @@ namespace PFC_tool
                 }
             }
             else
+#endif
             {
                 result = UsbSmbRead(nDevIndex, Addr, (byte)cmd, bPEC, sizeof(UInt16), pBuf);
             }
-            pwValue[0] = (short)((UInt16)pBuf[0] | (pBuf[1] << 8));
+            wValue = (UInt16)(pBuf[0] | (pBuf[1] << 8));
             return result;
         }
         public bool SendByte(int cmd)
@@ -88,11 +94,13 @@ namespace PFC_tool
         }
         public bool WriteByte(int cmd, int val)
         {
+#if _HDQ_
             if (bHDQ && cmd < 0x80)
             {
                 return UsbHdqWrite(nDevIndex, (byte)cmd, (byte)val);
             }
             else
+#endif
             {
                 byte[] pBuf = new byte[1];
                 pBuf[0] = (byte)val;
@@ -101,6 +109,7 @@ namespace PFC_tool
         }
         public bool WriteBytes(int cmd, int nCount, byte[] pBuf)
         {
+#if _HDQ_
             if (bHDQ && cmd < 0x80)
             {
                 for (int i = 0; i < nCount; i++)
@@ -109,7 +118,8 @@ namespace PFC_tool
                 return true;
             }
             else
-                return UsbSmbWrite(nDevIndex, Addr, (byte)cmd, 0, (byte)nCount, pBuf);
+#endif
+            return UsbSmbWrite(nDevIndex, Addr, (byte)cmd, 0, (byte)nCount, pBuf);
         }
         public bool WriteBlock(int cmd, int nCount, byte[] pBuf)
         {
@@ -120,6 +130,7 @@ namespace PFC_tool
         }
         public bool WriteWord(int cmd, int val)
         {
+#if _HDQ_
             if (bHDQ && cmd < 0x80)
             {
                 if (UsbHdqWrite(nDevIndex, (byte)cmd, 0xFF))
@@ -129,6 +140,7 @@ namespace PFC_tool
                 return false;
             }
             else
+#endif
             {
                 byte[] pBuf = new byte[2];
                 pBuf[0] = (byte)val;
@@ -156,10 +168,10 @@ namespace PFC_tool
             if (WriteWord(cmd, val))
             {
                 Thread.Sleep(10);
-                short[] pWord = new short[1];
-                if (ReadWord(cmd, pWord))
+                ushort w = 0;
+                if (ReadWord(cmd, out w))
                 {
-                    if (pWord[0] == val)
+                    if (w == val)
                         return true;
                 }
             }
@@ -172,13 +184,13 @@ namespace PFC_tool
             int retry_count;
             int index;
             byte[] sbuf = new byte[32];
-        
+
             if (sector_buf.Length < 256)
                 return false;
-        
+
             //Array.fill(sector_buf, (byte)0xFF);
             Array.Clear(sector_buf, 0, sector_buf.Length);
-        
+
             for (index = 0; index < 8; index++)
             {
                 if (bNewSBS)
@@ -193,10 +205,10 @@ namespace PFC_tool
                     if (retry_count == retry_end)
                         break;
                 }
-            
+
                 //Arrays.fill(sbuf, (byte) 0xFF);
                 Array.Clear(sbuf, 0, sbuf.Length);
-            
+
                 int compare_count;
                 for (compare_count = 0; compare_count < compare_end; compare_count++)
                 {
@@ -328,7 +340,7 @@ namespace PFC_tool
                             Thread.Sleep(100);
                         else
                             Thread.Sleep(10);
-
+#if DEBUG
                         for (retry_count = 0; retry_count < retry_end; retry_count++)
                         {
                             byte[] buf = new byte[32];
@@ -340,6 +352,7 @@ namespace PFC_tool
                         }
                         if (retry_count == retry_end)
                             break;
+#endif
                     }
                     if (j < 4)
                         break;
@@ -360,10 +373,10 @@ namespace PFC_tool
 
                     if (i == 0)
                     {
-                        short[] pWord = new short[1];
-                        if (ReadWord(0x77, pWord))
+                        ushort w;
+                        if (ReadWord(0x77, out w))
                         {
-                            if (pWord[0] % 4 == 0)
+                            if (w % 4 == 0)
                             {
                                 Thread.Sleep(1700);
                             }
