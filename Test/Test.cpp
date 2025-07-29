@@ -55,8 +55,8 @@ BOOL CTestApp::InitInstance()
 	if (nDevCount)
 	{
 		//WORD wVersion = UsbGetVersion(0);
-		VERIFY(!UsbSendIoCmd(nDevCount - 1, 0x7F));
-		VERIFY(!UsbSendIoCmd(0, 0xFF));
+		//VERIFY(!UsbSendIoCmd(nDevCount - 1, 0x7F));
+		//VERIFY(!UsbSendIoCmd(0, 0xFF));
 	}
 
 	CTestDlg dlg;
