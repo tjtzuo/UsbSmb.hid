@@ -31,6 +31,7 @@ namespace PFC_tool
         {
             return UsbGetVersion(nDevIndex);
         }
+        [STAThread]
         public bool ReadByte(int cmd, byte[] pValue)
         {
 #if _HDQ_
@@ -40,6 +41,7 @@ namespace PFC_tool
 #endif
             return UsbSmbRead(nDevIndex, Addr, (byte)cmd, 0, sizeof(Byte), pValue);
         }
+        [STAThread]
         public bool ReadBytes(int cmd, int nCount, byte[] pBuf)
         {
 #if _HDQ_
@@ -58,6 +60,7 @@ namespace PFC_tool
 #endif
             return UsbSmbRead(nDevIndex, Addr, (byte)cmd, 0, (byte)nCount, pBuf);
         }
+        [STAThread]
         public bool ReadBlock(int cmd, int nCount, byte[] pBuf)
         {
             byte[] pBlock = new byte[nCount + 1];
@@ -65,6 +68,7 @@ namespace PFC_tool
             Array.Copy(pBlock, 1, pBuf, 0, nCount);
             return result && (pBlock[0] <= nCount);
         }
+        [STAThread]
         public bool ReadWord(int cmd, out ushort wValue)
         {
             bool result = false;
@@ -87,11 +91,13 @@ namespace PFC_tool
             wValue = (UInt16)(pBuf[0] | (pBuf[1] << 8));
             return result;
         }
+        [STAThread]
         public bool SendByte(int cmd)
         {
             byte[] pBuf = new byte[1];
             return UsbSmbWrite(nDevIndex, Addr, (byte)cmd, 0, 0, pBuf);
         }
+        [STAThread]
         public bool WriteByte(int cmd, int val)
         {
 #if _HDQ_
@@ -107,6 +113,7 @@ namespace PFC_tool
                 return UsbSmbWrite(nDevIndex, Addr, (byte)cmd, 0, sizeof(Byte), pBuf);
             }
         }
+        [STAThread]
         public bool WriteBytes(int cmd, int nCount, byte[] pBuf)
         {
 #if _HDQ_
@@ -121,6 +128,7 @@ namespace PFC_tool
 #endif
             return UsbSmbWrite(nDevIndex, Addr, (byte)cmd, 0, (byte)nCount, pBuf);
         }
+        [STAThread]
         public bool WriteBlock(int cmd, int nCount, byte[] pBuf)
         {
             byte[] pBlock = new byte[nCount + 1];
@@ -128,6 +136,7 @@ namespace PFC_tool
             pBlock[0] = (byte)nCount;
             return UsbSmbWrite(nDevIndex, Addr, (byte)cmd, bPEC, (byte)pBlock.Length, pBlock);
         }
+        [STAThread]
         public bool WriteWord(int cmd, int val)
         {
 #if _HDQ_

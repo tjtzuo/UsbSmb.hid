@@ -42,7 +42,7 @@ namespace RegTool
 
             UInt16 ver = smbus.GetVersion();
             if (ver != 0)
-                label_connect.Text = String.Format("HID-SPI Device Version : {0}.{1:X2}", ver >> 8, ver & 0xff);
+                label_connect.Text = String.Format("HID-SMBus Device Version : {0}.{1:X2}", ver >> 8, ver & 0xff);
             else
             {
                 label_connect.Text = "No device connecting";
