@@ -39,4 +39,5 @@ public:
 	afx_msg void OnBnClickedButtonReadByte();
 	afx_msg void OnBnClickedButtonWriteByte();
 	afx_msg void OnBnClickedButtonWriteBatch();
+	afx_msg void OnBnClickedButtonRead2();
 };

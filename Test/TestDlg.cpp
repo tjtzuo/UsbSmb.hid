@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_READ_BYTE, &CTestDlg::OnBnClickedButtonReadByte)
 	ON_BN_CLICKED(IDC_BUTTON_WRITE_BYTE, &CTestDlg::OnBnClickedButtonWriteByte)
 	ON_BN_CLICKED(IDC_BUTTON_WRITE_BATCH, &CTestDlg::OnBnClickedButtonWriteBatch)
+	ON_BN_CLICKED(IDC_BUTTON_READ2, &CTestDlg::OnBnClickedButtonRead2)
 END_MESSAGE_MAP()
 
 
@@ -62,6 +63,7 @@ BOOL CTestDlg::OnInitDialog()
 	SetDlgItemText(IDC_MSG, str);
 	SetDlgItemText(IDC_EDIT_CMD, L"00");
 	SetDlgItemText(IDC_EDIT_DATA, L"00");
+	SetDlgItemText(IDC_EDIT_LEN, L"12");
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -207,10 +209,31 @@ void CTestDlg::OnBnClickedButtonWriteByte()
 void CTestDlg::OnBnClickedButtonWriteBatch()
 {
 	// TODO: Add your control notification handler code here
-	CFileDialog file(TRUE, _T(".ini"), _T("EEPROM"), OFN_HIDEREADONLY, _T("INI File(*.ini)|*.ini||"), this);
+	CFileDialog file(TRUE, _T(".ini"), _T("reg"), OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, _T("INI File(*.ini)|*.ini||"), this);
 	if (file.DoModal() == IDOK)
 	{
 		CWaitCursor cursor;
 		//BatchEepromWrite(file.GetPathName());
 	}
+}
+
+
+void CTestDlg::OnBnClickedButtonRead2()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItemText(IDC_EDIT_CMD, str);
+	BYTE byCommand = htoi(str);
+	BYTE vals[32];
+	int len = min(GetDlgItemInt(IDC_EDIT_LEN), 32);
+	if (ReadBytes(byCommand, vals, len))
+	{
+		PWSTR szBlockData = str.GetBuffer(100);
+		for (int i = 0; i < len; i++)
+			wsprintf(&szBlockData[i * 3], L"%02X ", vals[i]);
+		str.ReleaseBuffer();
+		SetDlgItemText( IDC_MSG, str );
+	}
+	else
+		SetDlgItemText( IDC_MSG, L"Read Fail" );
 }

@@ -2,6 +2,22 @@
 #include "UsbSmb.h"
 #include "SMBus.h"
 
+#ifdef _DEBUG
+#undef TRACE
+void TRACE(PCSTR str, ...)
+{
+	va_list args;
+	va_start(args, str);
+	CHAR szTemp[256];
+	if (_vsnprintf_s(szTemp, _countof(szTemp), _TRUNCATE, str, args) > 0)
+		OutputDebugStringA(szTemp);
+	va_end(args);
+}
+#else
+//#define TRACE(...)
+#endif
+
+
 FTC_STATUS Status = FTC_INVALID_HANDLE;
 char sbuf[100];
 CString g_strSMBus;
@@ -49,13 +65,14 @@ int htoi(const TCHAR *s)
 }
 
 
-int ReadBytes(BYTE byCommand)
+int ReadBytes(BYTE byCommand, PBYTE pBuf/* = NULL*/, UINT nReadBytes/* = 32*/)
 {
 	int nRet = 0;
-	UINT i, nReadBytes = 32;
+	UINT i;
 	BYTE buf[64];
 
-	memset(sbuf, 0, sizeof(sbuf));
+	if (pBuf == NULL) pBuf = (PBYTE)sbuf;
+	memset(pBuf, 0, nReadBytes);
 	Status = FTC_INVALID_HANDLE;
 
 	if (g_bHDQ)
@@ -72,16 +89,16 @@ int ReadBytes(BYTE byCommand)
 
 		if (Status == FTC_SUCCESS)
 		{
-			memcpy(sbuf, buf, nReadBytes);
+			memcpy(pBuf, buf, nReadBytes);
 			nRet = i;
 		}
 	}
 	else
 	{
-		if (UsbSmbRead(nDevIndex, Addr, byCommand, FALSE, nReadBytes, (PBYTE)sbuf))
+		if (UsbSmbRead(nDevIndex, Addr, byCommand, FALSE, nReadBytes, pBuf))
 		{
 			for (i = 0; i < nReadBytes; i++)
-				TRACE("%02X", sbuf[i]);
+				TRACE("%02X", pBuf[i]);
 			TRACE("\n");
 			nRet = nReadBytes;
 			Status = FTC_SUCCESS;
