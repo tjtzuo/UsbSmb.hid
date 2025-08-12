@@ -169,7 +169,7 @@ void CTestDlg::OnBnClickedButtonD1d2()
 		VERIFY(SendReceivePacket(buf, RecvLength, buf, &RecvLength, 0, 1) == 1);
 		VERIFY(buf[1] == 0x80 && buf[2] == 0);
 	}
-	UsbClose();
+	//UsbClose();
 }
 
 

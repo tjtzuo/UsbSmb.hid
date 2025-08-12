@@ -87,3 +87,13 @@ BOOL CTestApp::InitInstance()
 	return FALSE;
 }
 
+
+
+int CTestApp::ExitInstance()
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	UsbClose();
+
+	return CWinApp::ExitInstance();
+}

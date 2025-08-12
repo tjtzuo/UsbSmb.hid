@@ -267,7 +267,7 @@ void Read2(BYTE byCommand, PWORD pwValue)
 			}
 		}
 	}
-	UsbClose();
+	//UsbClose();
 
 	if (Status)
 		g_strSMBus = "SM Bus ERROR !!";
