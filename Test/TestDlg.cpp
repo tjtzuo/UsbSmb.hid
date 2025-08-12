@@ -63,7 +63,7 @@ BOOL CTestDlg::OnInitDialog()
 	SetDlgItemText(IDC_MSG, str);
 	SetDlgItemText(IDC_EDIT_CMD, L"00");
 	SetDlgItemText(IDC_EDIT_DATA, L"00");
-	SetDlgItemText(IDC_EDIT_LEN, L"12");
+	SetDlgItemText(IDC_EDIT_LEN, L"32");
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
