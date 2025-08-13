@@ -377,7 +377,7 @@ void ReadHDQ(BYTE byCommand, PBYTE pValue)
 	if (UsbHdqRead(nDevIndex, byCommand, pValue))
 		Status = FTC_SUCCESS;
 }
-/*
+
 void WriteEEPROM(UINT loc)
 {
 	Status = FTC_INVALID_HANDLE;
@@ -403,4 +403,4 @@ int ReadEEPROM(UINT loc)
 
 	return nRet;
 }
-*/
+

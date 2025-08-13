@@ -155,7 +155,7 @@ void CTestDlg::OnBnClickedButtonReset()
 void CTestDlg::OnBnClickedButtonReset2()
 {
 	// TODO: Add your control notification handler code here
-	UsbHidReset();
+	UsbReset();
 }
 
 
