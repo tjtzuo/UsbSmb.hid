@@ -333,7 +333,7 @@ BOOL WriteLoc(BYTE cmd, WORD loc, UINT len)
     buf[1] = LOBYTE(loc);
     memcpy(&buf[2], sbuf, len);
 
-	return UsbSmbWrite(nDevIndex, ADDR, cmd, FALSE, sizeof(WORD) + len, (PBYTE)buf);
+	return UsbSmbWrite(nDevIndex, ADDR, cmd, FALSE, len + 2, (PBYTE)buf);
 }
 
 void WriteF4(UINT loc, UINT len)
