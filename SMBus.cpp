@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UsbSmb.h"
 #include "SMBus.h"
-
+/*
 #ifdef _DEBUG
 #undef TRACE
 void TRACE(PCSTR str, ...)
@@ -16,10 +16,9 @@ void TRACE(PCSTR str, ...)
 #else
 //#define TRACE(...)
 #endif
-
-
+*/
 FTC_STATUS Status = FTC_INVALID_HANDLE;
-char sbuf[100];
+BYTE sbuf[100];
 CString g_strSMBus;
 BOOL g_bPEC = FALSE;
 BOOL g_bHDQ = FALSE;
@@ -30,9 +29,9 @@ BYTE Addr = 0xAA;
 #else
 BYTE Addr = 0x16;	// Smart Battery
 #endif
-
+/*
 #define READ_CMD2		0x46		// registered I2C control command
-
+*/
 
 /****************************************************************************
 
@@ -71,7 +70,7 @@ int ReadBytes(BYTE byCommand, PBYTE pBuf/* = NULL*/, UINT nReadBytes/* = 32*/)
 	UINT i;
 	BYTE buf[64];
 
-	if (pBuf == NULL) pBuf = (PBYTE)sbuf;
+	if (pBuf == NULL) pBuf = sbuf;
 	memset(pBuf, 0, nReadBytes);
 	Status = FTC_INVALID_HANDLE;
 
@@ -240,7 +239,7 @@ void ReadWord(BYTE byCommand, PWORD pwValue)
 	else
 		g_strSMBus.Empty();
 }
-
+/*
 void Read2(BYTE byCommand, PWORD pwValue)
 {
 	Status = FTC_INVALID_HANDLE;
@@ -267,14 +266,14 @@ void Read2(BYTE byCommand, PWORD pwValue)
 			}
 		}
 	}
-	//UsbClose();
+	UsbClose();
 
 	if (Status)
 		g_strSMBus = "SM Bus ERROR !!";
 	else
 		g_strSMBus.Empty();
 }
-
+*/
 void ReadByte(BYTE byCommand, PBYTE pValue)
 {
 	Status = FTC_INVALID_HANDLE;

@@ -6,7 +6,7 @@
 #include "Test.h"
 #include "TestDlg.h"
 #include "UsbSmb.h"
-#include "Smbus.h"
+#include "../Smbus.h"
 
 
 #ifdef _DEBUG
