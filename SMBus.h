@@ -1,3 +1,5 @@
+#ifndef _OPSMBUS_H_
+#define _OPSMBUS_H_
 
 #define FTC_SUCCESS 0 // FT_OK
 #define FTC_INVALID_HANDLE 1 // FT_INVALID_HANDLE
@@ -48,4 +50,6 @@ inline void TRACE(PCSTR str, ...)
 		OutputDebugStringA(szTemp);
 	va_end(args);
 }
+#endif
+
 #endif
